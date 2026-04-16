@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIMP — Polling Inverse Messaging Protocol</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+
+  :root {
+    --bg: #0a0a0a;
+    --surface: #111;
+    --border: #222;
+    --accent: #e8ff47;
+    --accent2: #47c8ff;
+    --text: #d4d4d4;
+    --muted: #555;
+    --code-bg: #0f0f0f;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  .header {
+    border-bottom: 1px solid var(--border);
+    padding: 60px 0 48px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: 'PIMP';
+    position: absolute;
+    right: -20px;
+    top: -40px;
+    font-family: var(--mono);
+    font-size: 220px;
+    font-weight: 700;
+    color: #ffffff04;
+    letter-spacing: -10px;
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-size: 42px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -1px;
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  h1 span {
+    color: var(--accent);
+  }
+
+  .subtitle {
+    font-size: 16px;
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 520px;
+    margin-bottom: 32px;
+  }
+
+  .meta-row {
+    display: flex;
+    gap: 32px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  .meta-row span { color: var(--text); }
+
+  .toc {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 28px 32px;
+    margin: 48px 0;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .toc-title {
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    font-size: 11px;
+  }
+
+  .toc ol {
+    padding-left: 20px;
+    color: var(--muted);
+    line-height: 2;
+  }
+
+  .toc a {
+    color: var(--text);
+    text-decoration: none;
+  }
+
+  .toc a:hover { color: var(--accent); }
+
+  section {
+    padding: 52px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  section:last-child { border-bottom: none; }
+
+  h2 {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  h2::before {
+    content: attr(data-n);
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  h3 {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin: 32px 0 12px;
+  }
+
+  h3::before {
+    content: '// ';
+    color: var(--muted);
+  }
+
+  p { margin-bottom: 16px; max-width: 680px; }
+
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    padding: 2px 6px;
+    color: var(--accent2);
+    border-radius: 2px;
+  }
+
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent2);
+    padding: 24px 28px;
+    margin: 20px 0;
+    overflow-x: auto;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.8;
+    color: #ccc;
+  }
+
+  pre .k { color: var(--accent); }
+  pre .n { color: var(--accent2); }
+  pre .c { color: var(--muted); font-style: italic; }
+
+  .note {
+    background: #0d1a0d;
+    border: 1px solid #1a3a1a;
+    border-left: 3px solid #4caf50;
+    padding: 16px 20px;
+    margin: 20px 0;
+    font-size: 13px;
+    color: #9ecf9e;
+    max-width: 680px;
+  }
+
+  table {
+    width: 100%;
+    max-width: 680px;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 12px;
+    margin: 20px 0;
+  }
+
+  th {
+    text-align: left;
+    color: var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    font-size: 11px;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #1a1a1a;
+    color: var(--text);
+  }
+
+  ul { padding-left: 24px; margin-bottom: 16px; }
+  li { margin-bottom: 8px; }
+
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <span class="badge">Protocol Specification</span>
+    <h1><span>PIMP</span> — Polling Inverse<br>Messaging Protocol</h1>
+    <p class="subtitle">A platform-agnostic protocol for streaming binary or text data over stateless serverless infrastructure via chunked polling.</p>
+    <div class="meta-row">
+      STATUS: <span>DRAFT</span> &nbsp;·&nbsp;
+      VERSION: <span>0.3.0</span> &nbsp;·&nbsp;
+      ENCODING: <span>Hybrid (Base64/Identity)</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="toc">
+    <div class="toc-title">Table of Contents</div>
+    <ol>
+      <li><a href="#motivation">Motivation</a></li>
+      <li><a href="#binary">Encoding Strategies</a></li>
+      <li><a href="#metadata">Metadata Chunk (Index 0)</a></li>
+      <li><a href="#sender">Sender Behavior</a></li>
+      <li><a href="#config">Configuration &amp; Defaults</a></li>
+    </ol>
+  </div>
+
+  <section id="motivation">
+    <h2 data-n="1.">Motivation</h2>
+    <p>
+      Serverless platforms often restrict response bodies to valid UTF-8 text strings. PIMP enables binary delivery over these transports using chunked polling, with an optimized "Text Pass-through" mode to avoid unnecessary encoding overhead for text-based streams.
+    </p>
+  </section>
+
+  <section id="binary">
+    <h2 data-n="2.">Encoding Strategies</h2>
+    <p>
+      To balance platform safety with performance, PIMP supports two encoding modes defined at the job level.
+    </p>
+
+    <h3>1. Base64 Mode (Binary-Safe)</h3>
+    <p>
+      Used for non-textual data (images, PDFs, protobufs). Data chunks are encoded as Base64 strings.
+    </p>
+
+    <h3>2. Identity Mode (Text Pass-through)</h3>
+    <p>
+      Used for textual data (JSON, Markdown, CSV). Data chunks are sent as raw strings. This avoids the 33% bandwidth overhead and the computational cost of double-parsing on the consumer.
+    </p>
+
+    <div class="note">
+      <strong>Recommendation:</strong> Senders SHOULD use Identity mode whenever <code>contentType</code> begins with <code>text/</code> or <code>application/json</code>.
+    </div>
+  </section>
+
+  <section id="metadata">
+    <h2 data-n="3.">Metadata Chunk (Index 0)</h2>
+    <p>
+      The first chunk is reserved for configuration. It MUST be sent immediately upon job start.
+    </p>
+    <pre><span class="c">// Index 0 Structure</span>
+{
+  <span class="n">contentType</span>: string,     <span class="c">// e.g. "application/json"</span>
+  <span class="n">contentEncoding</span>: string, <span class="c">// "identity" or "base64"</span>
+  <span class="n">compression</span>: string,     <span class="c">// "none", "gzip"</span>
+  <span class="n">contentLength</span>: number,   <span class="c">// optional total bytes</span>
+  <span class="n">meta</span>: object             <span class="c">// app-specific context</span>
+}</pre>
+  </section>
+
+  <section id="sender">
+    <h2 data-n="4.">Sender Behavior</h2>
+    <h3>Immediate Metadata Flush</h3>
+    <p>
+      The Metadata Chunk (index 0) <strong>MUST NOT</strong> be buffered. It must be written to the buffer immediately to allow the consumer to negotiate decoding strategies.
+    </p>
+
+    <h3>Data Batching</h3>
+    <p>
+      Subsequent chunks are buffered until <code>sender.bufferSize</code> is reached or <code>sender.flushInterval</code> expires.
+    </p>
+  </section>
+
+  <section id="config">
+    <h2 data-n="5.">Configuration &amp; Defaults</h2>
+    <p>Implementations MUST provide these defaults to ensure out-of-the-box functionality.</p>
+
+    <table>
+      <tr><th>Property</th><th>Default</th><th>Description</th></tr>
+      <tr>
+        <td><code>job.ttl_ms</code></td>
+        <td><code>300000</code></td>
+        <td>5 min buffer retention.</td>
+      </tr>
+      <tr>
+        <td><code>sender.bufferSize</code></td>
+        <td><code>10</code></td>
+        <td>Chunks per batch.</td>
+      </tr>
+      <tr>
+        <td><code>sender.flushInterval</code></td>
+        <td><code>250ms</code></td>
+        <td>Max wait before batch flush.</td>
+      </tr>
+      <tr>
+        <td><code>consumer.interval</code></td>
+        <td><code>500ms</code></td>
+        <td>Initial poll frequency.</td>
+      </tr>
+    </table>
+  </section>
+
+</div>
+
+<div style="border-top: 1px solid #1a1a1a; padding: 32px 0; margin-top: 0;">
+  <div class="container">
+    <span style="font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 2px;">
+      PIMP v0.3.0 — DRAFT — Polling Inverse Messaging Protocol
+    </span>
+  </div>
+</div>
+
+</body>
+</html>
+
+
