@@ -1,390 +1,454 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PIMP — Polling Inverse Messaging Protocol</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PIMP — Polling Inverse Messaging Protocol</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap');
 
-  :root {
-    --bg: #0a0a0a;
-    --surface: #111;
-    --border: #222;
-    --accent: #e8ff47;
-    --accent2: #47c8ff;
-    --text: #d4d4d4;
-    --muted: #555;
-    --code-bg: #0f0f0f;
-    --mono: 'IBM Plex Mono', monospace;
-    --sans: 'IBM Plex Sans', sans-serif;
-  }
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111;
+      --border: #222;
+      --accent: #e8ff47;
+      --accent2: #47c8ff;
+      --text: #d4d4d4;
+      --muted: #555;
+      --code-bg: #0f0f0f;
+      --mono: 'IBM Plex Mono', monospace;
+      --sans: 'IBM Plex Sans', sans-serif;
+    }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    font-weight: 300;
-    line-height: 1.7;
-    font-size: 15px;
-  }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      line-height: 1.7;
+      font-size: 15px;
+    }
 
-  .header {
-    border-bottom: 1px solid var(--border);
-    padding: 60px 0 48px;
-    position: relative;
-    overflow: hidden;
-  }
+    .header {
+      border-bottom: 1px solid var(--border);
+      padding: 60px 0 48px;
+      position: relative;
+      overflow: hidden;
+    }
 
-  .header::before {
-    content: 'PIMP';
-    position: absolute;
-    right: -20px;
-    top: -40px;
-    font-family: var(--mono);
-    font-size: 220px;
-    font-weight: 700;
-    color: #ffffff04;
-    letter-spacing: -10px;
-    pointer-events: none;
-    user-select: none;
-  }
+    .header::before {
+      content: 'PIMP';
+      position: absolute;
+      right: -20px;
+      top: -40px;
+      font-family: var(--mono);
+      font-size: 220px;
+      font-weight: 700;
+      color: #ffffff04;
+      letter-spacing: -10px;
+      pointer-events: none;
+      user-select: none;
+    }
 
-  .container {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 40px;
-  }
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
 
-  .badge {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--accent);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    display: block;
-  }
+    .badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: block;
+    }
 
-  h1 {
-    font-family: var(--mono);
-    font-size: 42px;
-    font-weight: 700;
-    color: #fff;
-    letter-spacing: -1px;
-    line-height: 1.1;
-    margin-bottom: 16px;
-  }
+    h1 {
+      font-family: var(--mono);
+      font-size: 42px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
 
-  h1 span {
-    color: var(--accent);
-  }
+    h1 span {
+      color: var(--accent);
+    }
 
-  .subtitle {
-    font-size: 16px;
-    color: var(--muted);
-    font-weight: 300;
-    max-width: 520px;
-    margin-bottom: 32px;
-  }
+    .subtitle {
+      font-size: 16px;
+      color: var(--muted);
+      font-weight: 300;
+      max-width: 520px;
+      margin-bottom: 32px;
+    }
 
-  .meta-row {
-    display: flex;
-    gap: 32px;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--muted);
-    letter-spacing: 1px;
-  }
+    .meta-row {
+      display: flex;
+      gap: 32px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
 
-  .meta-row span { color: var(--text); }
+    .meta-row span {
+      color: var(--text);
+    }
 
-  .toc {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent);
-    padding: 28px 32px;
-    margin: 48px 0;
-    font-family: var(--mono);
-    font-size: 12px;
-  }
+    .toc {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      padding: 28px 32px;
+      margin: 48px 0;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
 
-  .toc-title {
-    color: var(--accent);
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    font-size: 11px;
-  }
+    .toc-title {
+      color: var(--accent);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      font-size: 11px;
+    }
 
-  .toc ol {
-    padding-left: 20px;
-    color: var(--muted);
-    line-height: 2;
-  }
+    .toc ol {
+      padding-left: 20px;
+      color: var(--muted);
+      line-height: 2;
+    }
 
-  .toc a {
-    color: var(--text);
-    text-decoration: none;
-  }
+    .toc a {
+      color: var(--text);
+      text-decoration: none;
+    }
 
-  .toc a:hover { color: var(--accent); }
+    .toc a:hover {
+      color: var(--accent);
+    }
 
-  section {
-    padding: 52px 0;
-    border-bottom: 1px solid var(--border);
-  }
+    section {
+      padding: 52px 0;
+      border-bottom: 1px solid var(--border);
+    }
 
-  section:last-child { border-bottom: none; }
+    section:last-child {
+      border-bottom: none;
+    }
 
-  h2 {
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+    h2 {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
 
-  h2::before {
-    content: attr(data-n);
-    color: var(--muted);
-    font-size: 11px;
-  }
+    h2::before {
+      content: attr(data-n);
+      color: var(--muted);
+      font-size: 11px;
+    }
 
-  h3 {
-    font-family: var(--mono);
-    font-size: 14px;
-    font-weight: 600;
-    color: #fff;
-    margin: 32px 0 12px;
-  }
+    h3 {
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+      margin: 32px 0 12px;
+    }
 
-  h3::before {
-    content: '// ';
-    color: var(--muted);
-  }
+    h3::before {
+      content: '// ';
+      color: var(--muted);
+    }
 
-  p { margin-bottom: 16px; max-width: 680px; }
+    p {
+      margin-bottom: 16px;
+      max-width: 680px;
+    }
 
-  code {
-    font-family: var(--mono);
-    font-size: 12px;
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    padding: 2px 6px;
-    color: var(--accent2);
-    border-radius: 2px;
-  }
+    code {
+      font-family: var(--mono);
+      font-size: 12px;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      padding: 2px 6px;
+      color: var(--accent2);
+      border-radius: 2px;
+    }
 
-  pre {
-    background: var(--code-bg);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--accent2);
-    padding: 24px 28px;
-    margin: 20px 0;
-    overflow-x: auto;
-    font-family: var(--mono);
-    font-size: 12px;
-    line-height: 1.8;
-    color: #ccc;
-  }
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      padding: 24px 28px;
+      margin: 20px 0;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.8;
+      color: #ccc;
+    }
 
-  pre .k { color: var(--accent); }
-  pre .n { color: var(--accent2); }
-  pre .c { color: var(--muted); font-style: italic; }
+    pre .k {
+      color: var(--accent);
+    }
 
-  .note {
-    background: #0d1a0d;
-    border: 1px solid #1a3a1a;
-    border-left: 3px solid #4caf50;
-    padding: 16px 20px;
-    margin: 20px 0;
-    font-size: 13px;
-    color: #9ecf9e;
-    max-width: 680px;
-  }
+    pre .n {
+      color: var(--accent2);
+    }
 
-  .warn {
-    background: #1a1a0d;
-    border: 1px solid #3a3a1a;
-    border-left: 3px solid #ff9800;
-    padding: 16px 20px;
-    margin: 20px 0;
-    font-size: 13px;
-    color: #cfbf7e;
-    max-width: 680px;
-  }
+    pre .c {
+      color: var(--muted);
+      font-style: italic;
+    }
 
-  table {
-    width: 100%;
-    max-width: 680px;
-    border-collapse: collapse;
-    font-family: var(--mono);
-    font-size: 12px;
-    margin: 20px 0;
-  }
+    .note {
+      background: #0d1a0d;
+      border: 1px solid #1a3a1a;
+      border-left: 3px solid #4caf50;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-size: 13px;
+      color: #9ecf9e;
+      max-width: 680px;
+    }
 
-  th {
-    text-align: left;
-    color: var(--accent);
-    border-bottom: 1px solid var(--border);
-    padding: 10px 16px;
-    font-size: 11px;
-    text-transform: uppercase;
-  }
+    .warn {
+      background: #1a1a0d;
+      border: 1px solid #3a3a1a;
+      border-left: 3px solid #ff9800;
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-size: 13px;
+      color: #cfbf7e;
+      max-width: 680px;
+    }
 
-  td {
-    padding: 10px 16px;
-    border-bottom: 1px solid #1a1a1a;
-    color: var(--text);
-  }
+    table {
+      width: 100%;
+      max-width: 680px;
+      border-collapse: collapse;
+      font-family: var(--mono);
+      font-size: 12px;
+      margin: 20px 0;
+    }
 
-  ul { padding-left: 24px; margin-bottom: 16px; }
-  li { margin-bottom: 8px; }
+    th {
+      text-align: left;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
+      font-size: 11px;
+      text-transform: uppercase;
+    }
 
-  .changelog { font-size: 13px; color: var(--muted); }
-  .changelog ul { list-style: none; padding-left: 0; }
-  .changelog li::before { content: '△ '; color: var(--accent); }
+    td {
+      padding: 10px 16px;
+      border-bottom: 1px solid #1a1a1a;
+      color: var(--text);
+    }
 
-</style>
+    ul {
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .changelog {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .changelog ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .changelog li::before {
+      content: '△ ';
+      color: var(--accent);
+    }
+
+  </style>
 </head>
+
 <body>
 
-<div class="header">
+  <div class="header">
+    <div class="container">
+      <span class="badge">Protocol Specification</span>
+      <h1><span>PIMP</span> — Polling Inverse<br>Messaging Protocol</h1>
+      <p class="subtitle">A platform-agnostic protocol for streaming binary or text data over stateless serverless infrastructure via chunked polling.</p>
+      <div class="meta-row">
+        STATUS: <span>DRAFT</span> &nbsp;·&nbsp;
+        VERSION: <span>0.5.0</span> &nbsp;·&nbsp;
+        ENCODING: <span>Hybrid (Base64/Identity)</span>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
-    <span class="badge">Protocol Specification</span>
-    <h1><span>PIMP</span> — Polling Inverse<br>Messaging Protocol</h1>
-    <p class="subtitle">A platform-agnostic protocol for streaming binary or text data over stateless serverless infrastructure via chunked polling.</p>
-    <div class="meta-row">
-      STATUS: <span>DRAFT</span> &nbsp;·&nbsp;
-      VERSION: <span>0.5.0</span> &nbsp;·&nbsp;
-      ENCODING: <span>Hybrid (Base64/Identity)</span>
+
+    <div class="toc">
+      <div class="toc-title">Table of Contents</div>
+      <ol>
+        <li><a href="#conventions">Conventions &amp; Terminology</a></li>
+        <li><a href="#motivation">Motivation</a></li>
+        <li><a href="#encoding">Encoding Strategies</a></li>
+        <li><a href="#metadata">Metadata Chunk (Index 0)</a></li>
+        <li><a href="#envelope">Protocol Envelope</a></li>
+        <li><a href="#job-creation">Job Creation &amp; Handoff</a></li>
+        <li><a href="#write-api">Write API (Sender → Buffer)</a></li>
+        <li><a href="#sender">Sender Behavior</a></li>
+        <li><a href="#consumer">Consumer Behavior &amp; Polling API (Buffer → Consumer)</a></li>
+        <li><a href="#lifecycle">Job Lifecycle &amp; States</a></li>
+        <li><a href="#errors">Error Handling</a></li>
+        <li><a href="#config">Configuration &amp; Defaults</a></li>
+        <li><a href="#security">Security Considerations</a></li>
+        <li><a href="#examples">End-to-End Examples</a></li>
+      </ol>
     </div>
-  </div>
-</div>
 
-<div class="container">
+    <!-- ────────────────────────────────────────── 1 ── -->
+    <section id="conventions">
+      <h2 data-n="1.">Conventions &amp; Terminology</h2>
+      <p>
+        The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
+        "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
+        document are to be interpreted as described in
+        <a href="https://www.rfc-editor.org/rfc/rfc2119" style="color:var(--accent2)">RFC 2119</a> /
+        <a href="https://www.rfc-editor.org/rfc/rfc8174" style="color:var(--accent2)">RFC 8174</a>.
+      </p>
+      <table>
+        <tr>
+          <th>Term</th>
+          <th>Definition</th>
+        </tr>
+        <tr>
+          <td>Job</td>
+          <td>A single logical stream of data identified by a unique <code>jobId</code> (UUIDv4).</td>
+        </tr>
+        <tr>
+          <td>Chunk</td>
+          <td>An individually addressable unit of data within a job, identified by a zero-based <code>index</code>.</td>
+        </tr>
+        <tr>
+          <td>Sender</td>
+          <td>The process that produces chunks and writes them to the buffer.</td>
+        </tr>
+        <tr>
+          <td>Consumer</td>
+          <td>The process that polls for and reads chunks from the buffer.</td>
+        </tr>
+        <tr>
+          <td>Buffer</td>
+          <td>The intermediary store (e.g. KV, database) that holds chunks between sender and consumer.</td>
+        </tr>
+      </table>
+    </section>
 
-  <div class="toc">
-    <div class="toc-title">Table of Contents</div>
-    <ol>
-      <li><a href="#conventions">Conventions &amp; Terminology</a></li>
-      <li><a href="#motivation">Motivation</a></li>
-      <li><a href="#encoding">Encoding Strategies</a></li>
-      <li><a href="#metadata">Metadata Chunk (Index 0)</a></li>
-      <li><a href="#envelope">Protocol Envelope</a></li>
-      <li><a href="#job-creation">Job Creation &amp; Handoff</a></li>
-      <li><a href="#write-api">Write API (Sender → Buffer)</a></li>
-      <li><a href="#sender">Sender Behavior</a></li>
-      <li><a href="#consumer">Consumer Behavior &amp; Polling API (Buffer → Consumer)</a></li>
-      <li><a href="#lifecycle">Job Lifecycle &amp; States</a></li>
-      <li><a href="#errors">Error Handling</a></li>
-      <li><a href="#config">Configuration &amp; Defaults</a></li>
-      <li><a href="#security">Security Considerations</a></li>
-      <li><a href="#examples">End-to-End Examples</a></li>
-    </ol>
-  </div>
+    <!-- ────────────────────────────────────────── 2 ── -->
+    <section id="motivation">
+      <h2 data-n="2.">Motivation</h2>
+      <p>
+        Serverless platforms often restrict response bodies to valid UTF-8 text strings. PIMP enables binary delivery over these transports using chunked polling, with an optimized "Text Pass-through" mode to avoid unnecessary encoding overhead for text-based streams.
+      </p>
+    </section>
 
-  <!-- ────────────────────────────────────────── 1 ── -->
-  <section id="conventions">
-    <h2 data-n="1.">Conventions &amp; Terminology</h2>
-    <p>
-      The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-      "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-      document are to be interpreted as described in
-      <a href="https://www.rfc-editor.org/rfc/rfc2119" style="color:var(--accent2)">RFC 2119</a> /
-      <a href="https://www.rfc-editor.org/rfc/rfc8174" style="color:var(--accent2)">RFC 8174</a>.
-    </p>
-    <table>
-      <tr><th>Term</th><th>Definition</th></tr>
-      <tr><td>Job</td><td>A single logical stream of data identified by a unique <code>jobId</code> (UUIDv4).</td></tr>
-      <tr><td>Chunk</td><td>An individually addressable unit of data within a job, identified by a zero-based <code>index</code>.</td></tr>
-      <tr><td>Sender</td><td>The process that produces chunks and writes them to the buffer.</td></tr>
-      <tr><td>Consumer</td><td>The process that polls for and reads chunks from the buffer.</td></tr>
-      <tr><td>Buffer</td><td>The intermediary store (e.g. KV, database) that holds chunks between sender and consumer.</td></tr>
-    </table>
-  </section>
+    <!-- ────────────────────────────────────────── 3 ── -->
+    <section id="encoding">
+      <h2 data-n="3.">Encoding Strategies</h2>
+      <p>
+        To balance platform safety with performance, PIMP supports two encoding modes defined at the job level via <code>contentEncoding</code> in the Metadata Chunk.
+      </p>
 
-  <!-- ────────────────────────────────────────── 2 ── -->
-  <section id="motivation">
-    <h2 data-n="2.">Motivation</h2>
-    <p>
-      Serverless platforms often restrict response bodies to valid UTF-8 text strings. PIMP enables binary delivery over these transports using chunked polling, with an optimized "Text Pass-through" mode to avoid unnecessary encoding overhead for text-based streams.
-    </p>
-  </section>
+      <h3>1. Base64 Mode (Binary-Safe)</h3>
+      <p>
+        Used for non-textual data (images, PDFs, protobufs). Each data chunk value is a standard Base64-encoded string (RFC 4648 §4). The consumer MUST decode each chunk value before appending to the output buffer.
+      </p>
 
-  <!-- ────────────────────────────────────────── 3 ── -->
-  <section id="encoding">
-    <h2 data-n="3.">Encoding Strategies</h2>
-    <p>
-      To balance platform safety with performance, PIMP supports two encoding modes defined at the job level via <code>contentEncoding</code> in the Metadata Chunk.
-    </p>
+      <h3>2. Identity Mode (Text Pass-through)</h3>
+      <p>
+        Used for textual data (JSON, Markdown, CSV). Each data chunk value is a raw UTF-8 string. No decoding is required. This avoids the ~33% bandwidth overhead and the computational cost of double-parsing on the consumer.
+      </p>
+      <p>
+        If a chunk value contains characters outside the valid UTF-8 range, the sender MUST fall back to Base64 mode for the entire job. Partial mode switching within a job is not permitted.
+      </p>
 
-    <h3>1. Base64 Mode (Binary-Safe)</h3>
-    <p>
-      Used for non-textual data (images, PDFs, protobufs). Each data chunk value is a standard Base64-encoded string (RFC 4648 §4). The consumer MUST decode each chunk value before appending to the output buffer.
-    </p>
+      <div class="note">
+        <strong>Recommendation:</strong> Senders SHOULD use Identity mode whenever <code>contentType</code> begins with <code>text/</code>, <code>application/json</code>, or any <code>application/*+json</code> subtype.
+      </div>
+    </section>
 
-    <h3>2. Identity Mode (Text Pass-through)</h3>
-    <p>
-      Used for textual data (JSON, Markdown, CSV). Each data chunk value is a raw UTF-8 string. No decoding is required. This avoids the ~33% bandwidth overhead and the computational cost of double-parsing on the consumer.
-    </p>
-    <p>
-      If a chunk value contains characters outside the valid UTF-8 range, the sender MUST fall back to Base64 mode for the entire job. Partial mode switching within a job is not permitted.
-    </p>
-
-    <div class="note">
-      <strong>Recommendation:</strong> Senders SHOULD use Identity mode whenever <code>contentType</code> begins with <code>text/</code>, <code>application/json</code>, or any <code>application/*+json</code> subtype.
-    </div>
-  </section>
-
-  <!-- ────────────────────────────────────────── 4 ── -->
-  <section id="metadata">
-    <h2 data-n="4.">Metadata Chunk (Index 0)</h2>
-    <p>
-      The first chunk (index 0) is reserved for job configuration. It MUST be written to the buffer immediately upon job start. Its value is a JSON object with the following fields:
-    </p>
-    <table>
-      <tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr>
-      <tr>
-        <td><code>contentType</code></td>
-        <td>string</td>
-        <td>REQUIRED</td>
-        <td>MIME type of the original payload, e.g. <code>"application/json"</code>, <code>"image/png"</code>.</td>
-      </tr>
-      <tr>
-        <td><code>contentEncoding</code></td>
-        <td>string</td>
-        <td>REQUIRED</td>
-        <td><code>"identity"</code> or <code>"base64"</code>. Determines how all subsequent chunk values are encoded.</td>
-      </tr>
-      <tr>
-        <td><code>compression</code></td>
-        <td>string</td>
-        <td>OPTIONAL</td>
-        <td>Compression applied to the original payload <em>before</em> chunking. <code>"none"</code> (default) or <code>"gzip"</code>. When set, <code>contentLength</code> refers to the compressed size.</td>
-      </tr>
-      <tr>
-        <td><code>contentLength</code></td>
-        <td>number</td>
-        <td>OPTIONAL</td>
-        <td>Total byte length of the reassembled payload (after decoding, before decompression). When <code>compression</code> is <code>"gzip"</code>, this is the compressed byte length.</td>
-      </tr>
-      <tr>
-        <td><code>meta</code></td>
-        <td>object</td>
-        <td>OPTIONAL</td>
-        <td>Arbitrary application-specific context. Implementations MUST NOT interpret this field.</td>
-      </tr>
-    </table>
-    <pre><span class="c">// Example Metadata Chunk (index 0)</span>
+    <!-- ────────────────────────────────────────── 4 ── -->
+    <section id="metadata">
+      <h2 data-n="4.">Metadata Chunk (Index 0)</h2>
+      <p>
+        The first chunk (index 0) is reserved for job configuration. It MUST be written to the buffer immediately upon job start. Its value is a JSON object with the following fields:
+      </p>
+      <table>
+        <tr>
+          <th>Field</th>
+          <th>Type</th>
+          <th>Required</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><code>contentType</code></td>
+          <td>string</td>
+          <td>REQUIRED</td>
+          <td>MIME type of the original payload, e.g. <code>"application/json"</code>, <code>"image/png"</code>.</td>
+        </tr>
+        <tr>
+          <td><code>contentEncoding</code></td>
+          <td>string</td>
+          <td>REQUIRED</td>
+          <td><code>"identity"</code> or <code>"base64"</code>. Determines how all subsequent chunk values are encoded.</td>
+        </tr>
+        <tr>
+          <td><code>compression</code></td>
+          <td>string</td>
+          <td>OPTIONAL</td>
+          <td>Compression applied to the original payload <em>before</em> chunking. <code>"none"</code> (default) or <code>"gzip"</code>. When set, <code>contentLength</code> refers to the compressed size.</td>
+        </tr>
+        <tr>
+          <td><code>contentLength</code></td>
+          <td>number</td>
+          <td>OPTIONAL</td>
+          <td>Total byte length of the reassembled payload (after decoding, before decompression). When <code>compression</code> is <code>"gzip"</code>, this is the compressed byte length.</td>
+        </tr>
+        <tr>
+          <td><code>meta</code></td>
+          <td>object</td>
+          <td>OPTIONAL</td>
+          <td>Arbitrary application-specific context. Implementations MUST NOT interpret this field.</td>
+        </tr>
+      </table>
+      <pre><span class="c">// Example Metadata Chunk (index 0)</span>
 {
   <span class="n">"contentType"</span>: <span class="k">"application/json"</span>,
   <span class="n">"contentEncoding"</span>: <span class="k">"identity"</span>,
@@ -392,15 +456,15 @@
   <span class="n">"contentLength"</span>: <span class="k">48210</span>,
   <span class="n">"meta"</span>: { <span class="n">"requestId"</span>: <span class="k">"abc-123"</span> }
 }</pre>
-  </section>
+    </section>
 
-  <!-- ────────────────────────────────────────── 5 ── -->
-  <section id="envelope">
-    <h2 data-n="5.">Protocol Envelope</h2>
-    <p>
-      Every chunk stored in the buffer MUST be wrapped in the following envelope structure:
-    </p>
-    <pre>{
+    <!-- ────────────────────────────────────────── 5 ── -->
+    <section id="envelope">
+      <h2 data-n="5.">Protocol Envelope</h2>
+      <p>
+        Every chunk stored in the buffer MUST be wrapped in the following envelope structure:
+      </p>
+      <pre>{
   <span class="n">"jobId"</span>:     string,  <span class="c">// UUIDv4 — unique per job</span>
   <span class="n">"index"</span>:     number,  <span class="c">// 0-based sequential chunk index</span>
   <span class="n">"value"</span>:     string,  <span class="c">// chunk payload (metadata JSON for 0, encoded data for 1+)</span>
@@ -409,38 +473,38 @@
   <span class="n">"createdAt"</span>: number   <span class="c">// Unix epoch milliseconds</span>
 }</pre>
 
-    <h3>Field Rules</h3>
-    <ul>
-      <li><code>index</code> MUST be monotonically increasing with no gaps. Index 0 is always the Metadata Chunk.</li>
-      <li><code>done</code> MUST be <code>false</code> on all chunks except the last. The final chunk MAY have an empty <code>value</code>.</li>
-      <li><code>error</code> MUST be <code>null</code> on all non-error chunks. When non-null, the consumer MUST treat the job as failed.</li>
-      <li><code>value</code> for index 0 is a JSON-serialized Metadata object (§4). For index ≥ 1, it is an encoded data segment.</li>
-    </ul>
-  </section>
+      <h3>Field Rules</h3>
+      <ul>
+        <li><code>index</code> MUST be monotonically increasing with no gaps. Index 0 is always the Metadata Chunk.</li>
+        <li><code>done</code> MUST be <code>false</code> on all chunks except the last. The final chunk MAY have an empty <code>value</code>.</li>
+        <li><code>error</code> MUST be <code>null</code> on all non-error chunks. When non-null, the consumer MUST treat the job as failed.</li>
+        <li><code>value</code> for index 0 is a JSON-serialized Metadata object (§4). For index ≥ 1, it is an encoded data segment.</li>
+      </ul>
+    </section>
 
-  <!-- ────────────────────────────────────────── 6 ── -->
-  <section id="job-creation">
-    <h2 data-n="6.">Job Creation &amp; Handoff</h2>
-    <p>
-      The <strong>consumer</strong> is responsible for creating the job. It generates a <code>jobId</code> (UUIDv4) and passes it — along with the buffer's write URL — to the sender as part of the trigger request.
-    </p>
+    <!-- ────────────────────────────────────────── 6 ── -->
+    <section id="job-creation">
+      <h2 data-n="6.">Job Creation &amp; Handoff</h2>
+      <p>
+        The <strong>consumer</strong> is responsible for creating the job. It generates a <code>jobId</code> (UUIDv4) and passes it — along with the buffer's write URL — to the sender as part of the trigger request.
+      </p>
 
-    <h3>Trigger Request</h3>
-    <p>
-      The consumer initiates work by calling the sender's endpoint with at minimum:
-    </p>
-    <pre>{
+      <h3>Trigger Request</h3>
+      <p>
+        The consumer initiates work by calling the sender's endpoint with at minimum:
+      </p>
+      <pre>{
   <span class="n">"jobId"</span>:    string,  <span class="c">// generated by the consumer</span>
   <span class="n">"writeUrl"</span>: string,  <span class="c">// buffer endpoint the sender will POST chunks to</span>
   <span class="n">"writeKey"</span>: string,  <span class="c">// short-lived auth token scoped to this job</span>
   <span class="n">"payload"</span>:  object   <span class="c">// application-specific input (e.g. LLM prompt)</span>
 }</pre>
-    <p>
-      The sender MUST respond immediately (HTTP 202 Accepted) to acknowledge the job, then begin producing chunks asynchronously. The consumer does not wait for the sender to finish — it begins polling the buffer for chunks.
-    </p>
+      <p>
+        The sender MUST respond immediately (HTTP 202 Accepted) to acknowledge the job, then begin producing chunks asynchronously. The consumer does not wait for the sender to finish — it begins polling the buffer for chunks.
+      </p>
 
-    <h3>Sequence</h3>
-    <pre>
+      <h3>Sequence</h3>
+      <pre>
   <span class="n">Consumer</span>                 <span class="n">Sender</span>                  <span class="n">Buffer</span>
      │                        │                        │
      │── POST trigger ───────▸│                        │
@@ -456,17 +520,17 @@
      │◂── { chunks: [done] } ───────────────────────│
      ▼                        ▼                        ▼
     </pre>
-  </section>
+    </section>
 
-  <!-- ────────────────────────────────────────── 7 ── -->
-  <section id="write-api">
-    <h2 data-n="7.">Write API (Sender → Buffer)</h2>
-    <p>
-      The sender pushes chunks to the buffer store via HTTP POST. This is the counterpart to the read/poll API in §9.
-    </p>
+    <!-- ────────────────────────────────────────── 7 ── -->
+    <section id="write-api">
+      <h2 data-n="7.">Write API (Sender → Buffer)</h2>
+      <p>
+        The sender pushes chunks to the buffer store via HTTP POST. This is the counterpart to the read/poll API in §9.
+      </p>
 
-    <h3>Write Request</h3>
-    <pre><span class="k">POST</span> /pimp/<span class="n">{jobId}</span>/chunks
+      <h3>Write Request</h3>
+      <pre><span class="k">POST</span> /pimp/<span class="n">{jobId}</span>/chunks
 <span class="n">Authorization</span>: Bearer <span class="n">{writeKey}</span>
 <span class="n">Content-Type</span>: application/json
 
@@ -475,17 +539,17 @@
     <span class="c">/* one or more envelope objects (§5) */</span>
   ]
 }</pre>
-    <p>
-      The buffer store MUST validate that:
-    </p>
-    <ul>
-      <li>The <code>writeKey</code> is valid and scoped to the given <code>jobId</code>.</li>
-      <li>Each chunk's <code>jobId</code> matches the URL parameter.</li>
-      <li>Chunk indices have not already been written (idempotency — see below).</li>
-    </ul>
+      <p>
+        The buffer store MUST validate that:
+      </p>
+      <ul>
+        <li>The <code>writeKey</code> is valid and scoped to the given <code>jobId</code>.</li>
+        <li>Each chunk's <code>jobId</code> matches the URL parameter.</li>
+        <li>Chunk indices have not already been written (idempotency — see below).</li>
+      </ul>
 
-    <h3>Write Response</h3>
-    <pre><span class="c">// Success</span>
+      <h3>Write Response</h3>
+      <pre><span class="c">// Success</span>
 <span class="k">201</span> Created
 { <span class="n">"written"</span>: <span class="k">3</span> }  <span class="c">// number of new chunks accepted</span>
 
@@ -496,76 +560,76 @@
 <span class="c">// Auth failure</span>
 <span class="k">401</span> Unauthorized</pre>
 
-    <h3>Idempotency</h3>
-    <p>
-      If the sender retries a write (e.g. after a network timeout), the buffer MUST accept the request without error. Chunks with an <code>index</code> that already exists for the job MUST be silently ignored. This makes write operations safe to retry.
-    </p>
-  </section>
+      <h3>Idempotency</h3>
+      <p>
+        If the sender retries a write (e.g. after a network timeout), the buffer MUST accept the request without error. Chunks with an <code>index</code> that already exists for the job MUST be silently ignored. This makes write operations safe to retry.
+      </p>
+    </section>
 
-  <!-- ────────────────────────────────────────── 8 ── -->
-  <section id="sender">
-    <h2 data-n="8.">Sender Behavior</h2>
+    <!-- ────────────────────────────────────────── 8 ── -->
+    <section id="sender">
+      <h2 data-n="8.">Sender Behavior</h2>
 
-    <h3>Immediate Metadata Flush</h3>
-    <p>
-      The Metadata Chunk (index 0) MUST NOT be buffered. It MUST be written to the buffer immediately upon job creation, before any data chunks, to allow the consumer to negotiate decoding strategies.
-    </p>
+      <h3>Immediate Metadata Flush</h3>
+      <p>
+        The Metadata Chunk (index 0) MUST NOT be buffered. It MUST be written to the buffer immediately upon job creation, before any data chunks, to allow the consumer to negotiate decoding strategies.
+      </p>
 
-    <h3>Data Batching</h3>
-    <p>
-      Subsequent chunks (index ≥ 1) are buffered locally and flushed to the buffer store when either condition is met:
-    </p>
-    <ul>
-      <li>The number of buffered chunks reaches <code>sender.maxChunksPerBatch</code>, OR</li>
-      <li><code>sender.flushIntervalMs</code> milliseconds have elapsed since the last flush.</li>
-    </ul>
+      <h3>Data Batching</h3>
+      <p>
+        Subsequent chunks (index ≥ 1) are buffered locally and flushed to the buffer store when either condition is met:
+      </p>
+      <ul>
+        <li>The number of buffered chunks reaches <code>sender.maxChunksPerBatch</code>, OR</li>
+        <li><code>sender.flushIntervalMs</code> milliseconds have elapsed since the last flush.</li>
+      </ul>
 
-    <h3>End of Stream</h3>
-    <p>
-      After the last data segment, the sender MUST write a final chunk with <code>done: true</code>. If the final chunk carries data, <code>done</code> is set on that chunk. Otherwise, an empty sentinel chunk (<code>value: ""</code>, <code>done: true</code>) MUST be appended.
-    </p>
+      <h3>End of Stream</h3>
+      <p>
+        After the last data segment, the sender MUST write a final chunk with <code>done: true</code>. If the final chunk carries data, <code>done</code> is set on that chunk. Otherwise, an empty sentinel chunk (<code>value: ""</code>, <code>done: true</code>) MUST be appended.
+      </p>
 
-    <h3>Max Chunk Size</h3>
-    <p>
-      Individual chunk <code>value</code> strings SHOULD NOT exceed 256 KiB (262,144 bytes) to remain within common platform limits. Implementations MAY support a configurable ceiling.
-    </p>
-  </section>
+      <h3>Max Chunk Size</h3>
+      <p>
+        Individual chunk <code>value</code> strings SHOULD NOT exceed 256 KiB (262,144 bytes) to remain within common platform limits. Implementations MAY support a configurable ceiling.
+      </p>
+    </section>
 
-  <!-- ────────────────────────────────────────── 9 ── -->
-  <section id="consumer">
-    <h2 data-n="9.">Consumer Behavior &amp; Polling API</h2>
+    <!-- ────────────────────────────────────────── 9 ── -->
+    <section id="consumer">
+      <h2 data-n="9.">Consumer Behavior &amp; Polling API</h2>
 
-    <h3>Poll Request</h3>
-    <p>
-      The consumer requests chunks by providing <code>jobId</code> and the next expected <code>index</code>:
-    </p>
-    <pre><span class="k">GET</span> /pimp/<span class="n">{jobId}</span>?from=<span class="n">{index}</span></pre>
-    <p>
-      The buffer store MUST return all available chunks with <code>index &gt;= from</code>, ordered by index. If no new chunks are available, the store MUST return an empty array with HTTP 200.
-    </p>
+      <h3>Poll Request</h3>
+      <p>
+        The consumer requests chunks by providing <code>jobId</code> and the next expected <code>index</code>:
+      </p>
+      <pre><span class="k">GET</span> /pimp/<span class="n">{jobId}</span>?from=<span class="n">{index}</span></pre>
+      <p>
+        The buffer store MUST return all available chunks with <code>index &gt;= from</code>, ordered by index. If no new chunks are available, the store MUST return an empty array with HTTP 200.
+      </p>
 
-    <h3>Poll Response</h3>
-    <pre>{
+      <h3>Poll Response</h3>
+      <pre>{
   <span class="n">"chunks"</span>: [ <span class="c">/* array of envelope objects */</span> ],
   <span class="n">"nextIndex"</span>: number  <span class="c">// = max(returned index) + 1</span>
 }</pre>
 
-    <h3>Polling Cadence</h3>
-    <p>
-      The consumer begins polling at <code>consumer.pollIntervalMs</code>. Implementations SHOULD use exponential backoff when receiving consecutive empty responses, up to a maximum of <code>consumer.maxPollIntervalMs</code>. Upon receiving data, the interval MUST reset to <code>consumer.pollIntervalMs</code>.
-    </p>
+      <h3>Polling Cadence</h3>
+      <p>
+        The consumer begins polling at <code>consumer.pollIntervalMs</code>. Implementations SHOULD use exponential backoff when receiving consecutive empty responses, up to a maximum of <code>consumer.maxPollIntervalMs</code>. Upon receiving data, the interval MUST reset to <code>consumer.pollIntervalMs</code>.
+      </p>
 
-    <h3>Completion</h3>
-    <p>
-      When the consumer receives a chunk with <code>done: true</code>, it MUST stop polling. The reassembled payload is the concatenation of all <code>value</code> fields from index 1 through the final chunk, decoded according to <code>contentEncoding</code>, then decompressed per <code>compression</code>.
-    </p>
-  </section>
+      <h3>Completion</h3>
+      <p>
+        When the consumer receives a chunk with <code>done: true</code>, it MUST stop polling. The reassembled payload is the concatenation of all <code>value</code> fields from index 1 through the final chunk, decoded according to <code>contentEncoding</code>, then decompressed per <code>compression</code>.
+      </p>
+    </section>
 
-  <!-- ────────────────────────────────────────── 10 ── -->
-  <section id="lifecycle">
-    <h2 data-n="10.">Job Lifecycle &amp; States</h2>
-    <p>A job transitions through the following states:</p>
-    <pre>
+    <!-- ────────────────────────────────────────── 10 ── -->
+    <section id="lifecycle">
+      <h2 data-n="10.">Job Lifecycle &amp; States</h2>
+      <p>A job transitions through the following states:</p>
+      <pre>
   ┌──────────┐    index 0 written     ┌──────────┐
   │ <span class="k">CREATED</span>  │ ──────────────────▸ │ <span class="n">ACTIVE</span>   │
   └──────────┘                        └────┬─────┘
@@ -577,28 +641,52 @@
                    └────────────┘   └────────────┘   └────────────┘
                    done: true       error != null    ttl exceeded
     </pre>
-    <table>
-      <tr><th>State</th><th>Trigger</th><th>Consumer Action</th></tr>
-      <tr><td>CREATED</td><td>Job ID allocated, no chunks yet.</td><td>Poll; expect metadata shortly.</td></tr>
-      <tr><td>ACTIVE</td><td>Metadata chunk written; data streaming.</td><td>Poll and reassemble chunks.</td></tr>
-      <tr><td>COMPLETED</td><td>Chunk with <code>done: true</code> received.</td><td>Stop polling; finalize payload.</td></tr>
-      <tr><td>FAILED</td><td>Chunk with non-null <code>error</code> received.</td><td>Stop polling; surface error.</td></tr>
-      <tr><td>EXPIRED</td><td><code>job.ttlMs</code> elapsed since creation.</td><td>Stop polling; treat as timeout.</td></tr>
-    </table>
-    <div class="warn">
-      <strong>Important:</strong> Buffer implementations MUST delete all chunks for a job once <code>job.ttlMs</code> has elapsed, regardless of completion state.
-    </div>
-  </section>
+      <table>
+        <tr>
+          <th>State</th>
+          <th>Trigger</th>
+          <th>Consumer Action</th>
+        </tr>
+        <tr>
+          <td>CREATED</td>
+          <td>Job ID allocated, no chunks yet.</td>
+          <td>Poll; expect metadata shortly.</td>
+        </tr>
+        <tr>
+          <td>ACTIVE</td>
+          <td>Metadata chunk written; data streaming.</td>
+          <td>Poll and reassemble chunks.</td>
+        </tr>
+        <tr>
+          <td>COMPLETED</td>
+          <td>Chunk with <code>done: true</code> received.</td>
+          <td>Stop polling; finalize payload.</td>
+        </tr>
+        <tr>
+          <td>FAILED</td>
+          <td>Chunk with non-null <code>error</code> received.</td>
+          <td>Stop polling; surface error.</td>
+        </tr>
+        <tr>
+          <td>EXPIRED</td>
+          <td><code>job.ttlMs</code> elapsed since creation.</td>
+          <td>Stop polling; treat as timeout.</td>
+        </tr>
+      </table>
+      <div class="warn">
+        <strong>Important:</strong> Buffer implementations MUST delete all chunks for a job once <code>job.ttlMs</code> has elapsed, regardless of completion state.
+      </div>
+    </section>
 
-  <!-- ────────────────────────────────────────── 11 ── -->
-  <section id="errors">
-    <h2 data-n="11.">Error Handling</h2>
+    <!-- ────────────────────────────────────────── 11 ── -->
+    <section id="errors">
+      <h2 data-n="11.">Error Handling</h2>
 
-    <h3>Sender-Side Failure</h3>
-    <p>
-      If the sender encounters an unrecoverable error, it MUST write a final chunk with <code>done: true</code> and <code>error</code> set to a human-readable message. The <code>value</code> field MAY be empty.
-    </p>
-    <pre><span class="c">// Error sentinel chunk</span>
+      <h3>Sender-Side Failure</h3>
+      <p>
+        If the sender encounters an unrecoverable error, it MUST write a final chunk with <code>done: true</code> and <code>error</code> set to a human-readable message. The <code>value</code> field MAY be empty.
+      </p>
+      <pre><span class="c">// Error sentinel chunk</span>
 {
   <span class="n">"jobId"</span>: <span class="k">"550e8400-..."</span>,
   <span class="n">"index"</span>: <span class="k">4</span>,
@@ -608,98 +696,103 @@
   <span class="n">"createdAt"</span>: <span class="k">1713600000000</span>
 }</pre>
 
-    <h3>Consumer-Side Resilience</h3>
-    <ul>
-      <li>If the consumer receives an HTTP error (5xx) from the buffer store, it SHOULD retry with exponential backoff before treating the job as failed.</li>
-      <li>If no new chunks arrive for longer than <code>consumer.stallTimeoutMs</code>, the consumer SHOULD treat the job as failed with a timeout error.</li>
-      <li>Duplicate chunks (same index received twice) MUST be silently discarded.</li>
-      <li>Out-of-order chunks MUST be buffered and reassembled in index order.</li>
-    </ul>
+      <h3>Consumer-Side Resilience</h3>
+      <ul>
+        <li>If the consumer receives an HTTP error (5xx) from the buffer store, it SHOULD retry with exponential backoff before treating the job as failed.</li>
+        <li>If no new chunks arrive for longer than <code>consumer.stallTimeoutMs</code>, the consumer SHOULD treat the job as failed with a timeout error.</li>
+        <li>Duplicate chunks (same index received twice) MUST be silently discarded.</li>
+        <li>Out-of-order chunks MUST be buffered and reassembled in index order.</li>
+      </ul>
 
-    <h3>Missing Chunks</h3>
-    <p>
-      If the consumer detects a gap (e.g. receives index 5 without having index 4), it MUST NOT advance reassembly past the gap. It SHOULD continue polling with <code>from</code> set to the missing index.
-    </p>
-  </section>
+      <h3>Missing Chunks</h3>
+      <p>
+        If the consumer detects a gap (e.g. receives index 5 without having index 4), it MUST NOT advance reassembly past the gap. It SHOULD continue polling with <code>from</code> set to the missing index.
+      </p>
+    </section>
 
-  <!-- ────────────────────────────────────────── 12 ── -->
-  <section id="config">
-    <h2 data-n="12.">Configuration &amp; Defaults</h2>
-    <p>Implementations MUST provide these defaults to ensure out-of-the-box functionality. All timing values are integers in milliseconds.</p>
+    <!-- ────────────────────────────────────────── 12 ── -->
+    <section id="config">
+      <h2 data-n="12.">Configuration &amp; Defaults</h2>
+      <p>Implementations MUST provide these defaults to ensure out-of-the-box functionality. All timing values are integers in milliseconds.</p>
 
-    <table>
-      <tr><th>Property</th><th>Type</th><th>Default</th><th>Description</th></tr>
-      <tr>
-        <td><code>job.ttlMs</code></td>
-        <td>number</td>
-        <td><code>300000</code></td>
-        <td>Maximum job lifetime. Buffer MUST evict after expiry.</td>
-      </tr>
-      <tr>
-        <td><code>sender.maxChunksPerBatch</code></td>
-        <td>number</td>
-        <td><code>10</code></td>
-        <td>Max number of chunks buffered locally before flushing to the store.</td>
-      </tr>
-      <tr>
-        <td><code>sender.flushIntervalMs</code></td>
-        <td>number</td>
-        <td><code>250</code></td>
-        <td>Max milliseconds to wait before flushing a partial batch.</td>
-      </tr>
-      <tr>
-        <td><code>consumer.pollIntervalMs</code></td>
-        <td>number</td>
-        <td><code>500</code></td>
-        <td>Initial poll frequency in milliseconds.</td>
-      </tr>
-      <tr>
-        <td><code>consumer.maxPollIntervalMs</code></td>
-        <td>number</td>
-        <td><code>5000</code></td>
-        <td>Upper bound for exponential backoff.</td>
-      </tr>
-      <tr>
-        <td><code>consumer.stallTimeoutMs</code></td>
-        <td>number</td>
-        <td><code>30000</code></td>
-        <td>Max time without new chunks before the consumer treats the job as stalled.</td>
-      </tr>
-    </table>
-  </section>
+      <table>
+        <tr>
+          <th>Property</th>
+          <th>Type</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><code>job.ttlMs</code></td>
+          <td>number</td>
+          <td><code>300000</code></td>
+          <td>Maximum job lifetime. Buffer MUST evict after expiry.</td>
+        </tr>
+        <tr>
+          <td><code>sender.maxChunksPerBatch</code></td>
+          <td>number</td>
+          <td><code>10</code></td>
+          <td>Max number of chunks buffered locally before flushing to the store.</td>
+        </tr>
+        <tr>
+          <td><code>sender.flushIntervalMs</code></td>
+          <td>number</td>
+          <td><code>250</code></td>
+          <td>Max milliseconds to wait before flushing a partial batch.</td>
+        </tr>
+        <tr>
+          <td><code>consumer.pollIntervalMs</code></td>
+          <td>number</td>
+          <td><code>500</code></td>
+          <td>Initial poll frequency in milliseconds.</td>
+        </tr>
+        <tr>
+          <td><code>consumer.maxPollIntervalMs</code></td>
+          <td>number</td>
+          <td><code>5000</code></td>
+          <td>Upper bound for exponential backoff.</td>
+        </tr>
+        <tr>
+          <td><code>consumer.stallTimeoutMs</code></td>
+          <td>number</td>
+          <td><code>30000</code></td>
+          <td>Max time without new chunks before the consumer treats the job as stalled.</td>
+        </tr>
+      </table>
+    </section>
 
-  <!-- ────────────────────────────────────────── 13 ── -->
-  <section id="security">
-    <h2 data-n="13.">Security Considerations</h2>
+    <!-- ────────────────────────────────────────── 13 ── -->
+    <section id="security">
+      <h2 data-n="13.">Security Considerations</h2>
 
-    <h3>Write Authentication</h3>
-    <p>
-      The buffer's write endpoint MUST require a <code>writeKey</code> that is scoped to a single <code>jobId</code>. The consumer generates this key at job creation time and passes it to the sender in the trigger request. The key SHOULD be a cryptographically random token (≥ 32 bytes) or a signed JWT with a <code>jobId</code> claim and a short expiry (≤ <code>job.ttlMs</code>).
-    </p>
+      <h3>Write Authentication</h3>
+      <p>
+        The buffer's write endpoint MUST require a <code>writeKey</code> that is scoped to a single <code>jobId</code>. The consumer generates this key at job creation time and passes it to the sender in the trigger request. The key SHOULD be a cryptographically random token (≥ 32 bytes) or a signed JWT with a <code>jobId</code> claim and a short expiry (≤ <code>job.ttlMs</code>).
+      </p>
 
-    <h3>Read Access</h3>
-    <p>
-      The poll endpoint MAY be unauthenticated if <code>jobId</code> values are sufficiently unguessable (UUIDv4 provides 122 bits of entropy). For higher-security deployments, implementations SHOULD require a separate read token or tie access to the originating session.
-    </p>
+      <h3>Read Access</h3>
+      <p>
+        The poll endpoint MAY be unauthenticated if <code>jobId</code> values are sufficiently unguessable (UUIDv4 provides 122 bits of entropy). For higher-security deployments, implementations SHOULD require a separate read token or tie access to the originating session.
+      </p>
 
-    <h3>Transport</h3>
-    <p>
-      All endpoints (trigger, write, poll) MUST be served over HTTPS. Implementations MUST NOT transmit <code>writeKey</code> values over unencrypted channels.
-    </p>
+      <h3>Transport</h3>
+      <p>
+        All endpoints (trigger, write, poll) MUST be served over HTTPS. Implementations MUST NOT transmit <code>writeKey</code> values over unencrypted channels.
+      </p>
 
-    <h3>Payload Size Limits</h3>
-    <p>
-      Buffer implementations SHOULD enforce a maximum total job size (e.g. 50 MiB) and a maximum chunk count to prevent abuse. Senders exceeding these limits SHOULD receive a <code>413 Payload Too Large</code> response.
-    </p>
-  </section>
+      <h3>Payload Size Limits</h3>
+      <p>
+        Buffer implementations SHOULD enforce a maximum total job size (e.g. 50 MiB) and a maximum chunk count to prevent abuse. Senders exceeding these limits SHOULD receive a <code>413 Payload Too Large</code> response.
+      </p>
+    </section>
 
-  <!-- ────────────────────────────────────────── 14 ── -->
-  <section id="examples">
-    <h2 data-n="14.">End-to-End Examples</h2>
+    <!-- ────────────────────────────────────────── 14 ── -->
+    <section id="examples">
+      <h2 data-n="14.">End-to-End Examples</h2>
 
-    <h3>Example A — Identity / JSON Stream</h3>
-    <p>Sender streams a JSON array of records to a consumer.</p>
-    <pre><span class="c">// Chunk 0 — Metadata (written immediately)</span>
+      <h3>Example A — Identity / JSON Stream</h3>
+      <p>Sender streams a JSON array of records to a consumer.</p>
+      <pre><span class="c">// Chunk 0 — Metadata (written immediately)</span>
 { <span class="n">"jobId"</span>: <span class="k">"a1b2c3..."</span>, <span class="n">"index"</span>: <span class="k">0</span>,
   <span class="n">"value"</span>: <span class="k">"{\"contentType\":\"application/json\",\"contentEncoding\":\"identity\",\"compression\":\"none\"}"</span>,
   <span class="n">"done"</span>: <span class="k">false</span>, <span class="n">"error"</span>: <span class="k">null</span>, <span class="n">"createdAt"</span>: <span class="k">1713600000000</span> }
@@ -717,9 +810,9 @@
 <span class="c">// Consumer reassembles: value[1] + value[2]</span>
 <span class="c">// → [{"id":1,"name":"Alice"},{"id":2,"name":"Bob"}]</span></pre>
 
-    <h3>Example B — Base64 / Binary Image</h3>
-    <p>Sender streams a small PNG to a consumer.</p>
-    <pre><span class="c">// Chunk 0 — Metadata</span>
+      <h3>Example B — Base64 / Binary Image</h3>
+      <p>Sender streams a small PNG to a consumer.</p>
+      <pre><span class="c">// Chunk 0 — Metadata</span>
 { <span class="n">"jobId"</span>: <span class="k">"d4e5f6..."</span>, <span class="n">"index"</span>: <span class="k">0</span>,
   <span class="n">"value"</span>: <span class="k">"{\"contentType\":\"image/png\",\"contentEncoding\":\"base64\",\"compression\":\"none\",\"contentLength\":1024}"</span>,
   <span class="n">"done"</span>: <span class="k">false</span>, <span class="n">"error"</span>: <span class="k">null</span>, <span class="n">"createdAt"</span>: <span class="k">1713600001000</span> }
@@ -736,42 +829,43 @@
 
 <span class="c">// Consumer reassembles: base64Decode(value[1] + value[2])</span>
 <span class="c">// → &lt;binary PNG bytes&gt;</span></pre>
-  </section>
+    </section>
 
-</div>
-
-<div style="border-top: 1px solid #1a1a1a; padding: 32px 0; margin-top: 0;">
-  <div class="container">
-    <div class="changelog">
-      <strong style="color:var(--text);">Changelog — v0.5.0</strong>
-      <ul>
-        <li>Added §6 Job Creation &amp; Handoff — trigger request schema, sequence diagram, consumer-owns-jobId pattern.</li>
-        <li>Added §7 Write API — POST endpoint for sender → buffer chunk writes, idempotency guarantees.</li>
-        <li>Added §13 Security Considerations — writeKey auth, read access, HTTPS, payload size limits.</li>
-        <li>Reordered sections to reflect the full request lifecycle: create → write → poll → complete.</li>
-      </ul>
-      <br>
-      <strong style="color:var(--text);">Changelog — v0.4.0</strong>
-      <ul>
-        <li>Added §1 Conventions &amp; Terminology (RFC 2119/8174 reference).</li>
-        <li>Added Protocol Envelope with wire-level chunk schema.</li>
-        <li>Added Consumer Behavior &amp; Polling API with request/response contract.</li>
-        <li>Added Job Lifecycle &amp; States (CREATED → ACTIVE → COMPLETED | FAILED | EXPIRED).</li>
-        <li>Added Error Handling (sender errors, consumer resilience, gap handling).</li>
-        <li>Added End-to-End Examples (identity JSON, base64 binary).</li>
-        <li>Renamed <code>sender.bufferSize</code> → <code>sender.maxChunksPerBatch</code>.</li>
-        <li>Normalized all timing config to integer milliseconds (<code>*Ms</code> suffix).</li>
-        <li>Clarified <code>contentLength</code> semantics relative to compression.</li>
-        <li>Expanded Metadata Chunk to a full field-by-field table with types and requiredness.</li>
-        <li>Added <code>consumer.maxPollIntervalMs</code> and <code>consumer.stallTimeoutMs</code> config keys.</li>
-      </ul>
-    </div>
-    <br>
-    <span style="font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 2px;">
-      PIMP v0.5.0 — DRAFT — Polling Inverse Messaging Protocol
-    </span>
   </div>
-</div>
+
+  <div style="border-top: 1px solid #1a1a1a; padding: 32px 0; margin-top: 0;">
+    <div class="container">
+      <div class="changelog">
+        <strong style="color:var(--text);">Changelog — v0.5.0</strong>
+        <ul>
+          <li>Added §6 Job Creation &amp; Handoff — trigger request schema, sequence diagram, consumer-owns-jobId pattern.</li>
+          <li>Added §7 Write API — POST endpoint for sender → buffer chunk writes, idempotency guarantees.</li>
+          <li>Added §13 Security Considerations — writeKey auth, read access, HTTPS, payload size limits.</li>
+          <li>Reordered sections to reflect the full request lifecycle: create → write → poll → complete.</li>
+        </ul>
+        <br>
+        <strong style="color:var(--text);">Changelog — v0.4.0</strong>
+        <ul>
+          <li>Added §1 Conventions &amp; Terminology (RFC 2119/8174 reference).</li>
+          <li>Added Protocol Envelope with wire-level chunk schema.</li>
+          <li>Added Consumer Behavior &amp; Polling API with request/response contract.</li>
+          <li>Added Job Lifecycle &amp; States (CREATED → ACTIVE → COMPLETED | FAILED | EXPIRED).</li>
+          <li>Added Error Handling (sender errors, consumer resilience, gap handling).</li>
+          <li>Added End-to-End Examples (identity JSON, base64 binary).</li>
+          <li>Renamed <code>sender.bufferSize</code> → <code>sender.maxChunksPerBatch</code>.</li>
+          <li>Normalized all timing config to integer milliseconds (<code>*Ms</code> suffix).</li>
+          <li>Clarified <code>contentLength</code> semantics relative to compression.</li>
+          <li>Expanded Metadata Chunk to a full field-by-field table with types and requiredness.</li>
+          <li>Added <code>consumer.maxPollIntervalMs</code> and <code>consumer.stallTimeoutMs</code> config keys.</li>
+        </ul>
+      </div>
+      <br>
+      <span style="font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 2px;">
+        PIMP v0.5.0 — DRAFT — Polling Inverse Messaging Protocol
+      </span>
+    </div>
+  </div>
 
 </body>
+
 </html>
